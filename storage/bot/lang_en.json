@@ -1,0 +1,15 @@
+{
+    "phone_send": "To continue the reservation, send your phone number",
+    "poles_send": "To continue the reservation, send : ",
+    "booking_send":"To make a reservation, send a message indicating: your phone number in the format +38-067-00-00-000, table type (pool, snooker, pyramid) and time of reservation (date-month-year hours: minutes)",
+    "yes_table_not_date":"You did not specify the booking time (date-month-year hours:minutes)",
+    "thank_you":"Thank you, your order has been accepted",
+
+    "all":"To clarify the details, contact us by phone phone_number or wait for an employee’s response in the chat",
+
+    "time": "hour (hours:minutes)",
+    "date": "date (date-month-year)",
+    "phone": "phone (+38-067-00-00-000)",
+   "table": "table (pool, snooker, pyramid)"
+
+}
