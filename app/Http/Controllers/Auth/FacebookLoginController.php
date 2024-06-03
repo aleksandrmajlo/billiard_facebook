@@ -52,9 +52,11 @@ class FacebookLoginController extends Controller
                 'access_token' => $accessToken,
             ]);
             $pages = $response->json()['data'];
-            \DB::table('face_pages')->where('user_id', $club_user_id)->delete();
+
             foreach ($pages as $page) {
-                \DB::table('face_pages')->where('page_id', $page['id'])->delete();
+
+                \DB::table('face_pages')
+                    ->where('page_id', $page['id'])->delete();
                 \DB::table('face_pages')->insert([
                     'token' => $page['access_token'],
                     'user_id' => $club_user_id,
@@ -64,58 +66,75 @@ class FacebookLoginController extends Controller
                     'billiard_id' => $billiards_id,
                     'created_at' => now(),
                 ]);
-            }
 
-            // Fetch Instagram accounts
-            $igResponse = Http::get('https://graph.facebook.com/v12.0/me/accounts', [
-                'access_token' => $accessToken,
-                'fields' => 'instagram_business_account'
-            ]);
-//            dump($igResponse);
-//            dump($igResponse->json());
-//            dump($igResponse->json()['data']);
+//                dump(isset($page['instagram_business_account']));
+//                dump($page);
 
-            if ($igResponse->successful()) {
-                $accounts = $igResponse->json()['data'];
-                foreach ($accounts as $account) {
-                    if (isset($account['instagram_business_account'])) {
-                        $instagramAccount = $account;
-//                        dump($account);
-//                         dd();
+                if (isset($page['instagram_business_account'])) {
+                    $instagramId = $page['instagram_business_account']['id'];
+                    // Используем правильный endpoint для получения токена Instagram
+                    $instagramTokenResponse = Http::get("https://graph.facebook.com/v12.0/{$instagramId}", [
+                        'fields' => 'access_token',
+                        'access_token' => $accessToken,
+                    ]);
+//                    dump($instagramTokenResponse);
+
+                    if ($instagramTokenResponse->successful()) {
+
+                        $instagramToken = $instagramTokenResponse->json()['access_token'];
+//                        dump($instagramTokenResponse->json()['access_token']);
+
                         \DB::table('instagram_pages')->updateOrInsert(
                             [
-                                'account_id' => $instagramAccount['id'],
+                                'account_id' => $instagramId,
                             ],
                             [
                                 'user_id' => $club_user_id,
-                                'access_token' => $instagramAccount['access_token'],
-                                'name' => $instagramAccount['name'],
+                                'access_token' =>$instagramToken,
+                                'name' => $user->name,
                                 'billiard_id' => $billiards_id,
                                 'created_at' => now(),
                             ]
                         );
-
                     }
+
                 }
-            } else {
 
             }
+
+            /*
+             $igResponse = Http::get('https://graph.facebook.com/v12.0/me/accounts', [
+                 'access_token' => $accessToken,
+                 'fields' => 'instagram_business_account'
+             ]);
+             if ($igResponse->successful()) {
+                 $accounts = $igResponse->json()['data'];
+                 foreach ($accounts as $account) {
+                     if (isset($account['instagram_business_account'])) {
+                         $instagramAccount = $account;
+                         \DB::table('instagram_pages')->updateOrInsert(
+                             [
+                                 'account_id' => $instagramAccount['id'],
+                             ],
+                             [
+                                 'user_id' => $club_user_id,
+                                 'access_token' => $instagramAccount['access_token'],
+                                 'name' => $instagramAccount['name'],
+                                 'billiard_id' => $billiards_id,
+                                 'created_at' => now(),
+                             ]
+                         );
+
+                     }
+                 }
+             }
+             */
+
             return redirect()->route('settings');
+
         } catch (Exception $e) {
             return redirect()->route('settings');
         }
-    }
-
-
-    private function saveInstagramToken($instagramAccount)
-    {
-        // Implement the logic to save the Instagram account token to the database
-        // Example:
-        // InstagramAccount::create([
-        //     'account_id' => $instagramAccount['id'],
-        //     'access_token' => $instagramAccount['access_token'],
-        //     'name' => $instagramAccount['name']
-        // ]);
     }
 
 
