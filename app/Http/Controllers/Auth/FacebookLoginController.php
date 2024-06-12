@@ -70,6 +70,7 @@ class FacebookLoginController extends Controller
 //                dump(isset($page['instagram_business_account']));
 //                dump($page);
 
+
                 if (isset($page['instagram_business_account'])) {
                     $instagramId = $page['instagram_business_account']['id'];
                     // Используем правильный endpoint для получения токена Instagram
@@ -90,7 +91,7 @@ class FacebookLoginController extends Controller
                             ],
                             [
                                 'user_id' => $club_user_id,
-                                'access_token' =>$instagramToken,
+                                'access_token' => $instagramToken,
                                 'name' => $user->name,
                                 'billiard_id' => $billiards_id,
                                 'created_at' => now(),

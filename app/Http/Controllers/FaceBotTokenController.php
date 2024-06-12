@@ -45,6 +45,31 @@ class FaceBotTokenController extends Controller
                     ]
                 );
 
+
+            /*
+            $result = \DB::table('face_tokens')->where('face_id',$face_id)->first();
+//            $result = \DB::connection('mysql3')->table('face_tokens')->where('face_id',$face_id)->first();
+            if(is_null($result)){
+                \DB::table('face_tokens')
+                    ->insert([
+                        'token' => $token,
+                        'billiard_id' =>$billiards_id,
+                        'name' => $data['name'],
+                        'face_id' => $data['id'],
+                        'created_at'=>Carbon::now()
+                    ]);
+
+                \DB::connection('mysql3')->table('face_tokens')
+                    ->insert([
+                        'token' => $token,
+                        'billiard_id' =>$billiards_id,
+                        'name' => $data['name'],
+                        'face_id' => $data['id'],
+                        'created_at'=>Carbon::now()
+                    ]);
+
+            }
+        */
         }
 
         return response()->json(['suc' => 1]);

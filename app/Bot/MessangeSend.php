@@ -28,9 +28,16 @@ class MessangeSend
                 $text=str_replace('phone_number',$phone_number,$text);
             }
         }
-        $response['message']=$text;
+
         if($type=='google'){
+            $response['message']=$text;
             GoogleBot::send_mess($response);
+        }elseif ($type=='face'){
+            $response["message"]["text"]=$text;
+            FaceBot::send_mess($response);;
+        }elseif ($type=='insta'){
+            $response["message"]["text"]=$text;
+            InstaBot::send_mess($response);;
         }
 
         $facemessage = new FaceMessage;
@@ -44,10 +51,18 @@ class MessangeSend
 
    // для next acion
     public static function sendNext($key,$facecustomer,$response,$type='google'){
-        $text=$response['message'];
+
         if($type=='google'){
+            $text=$response['message'];
             GoogleBot::send_mess($response);
+        }elseif ($type=='face'){
+            $text=$response["message"]["text"];
+            FaceBot::send_mess($response);;
+        }elseif ($type=='insta'){
+            $text=$response["message"]["text"];
+            InstaBot::send_mess($response);;
         }
+
         $facemessage = new FaceMessage;
         $facemessage->face_customer_id = $facecustomer->id;
         $facemessage->message = $text;

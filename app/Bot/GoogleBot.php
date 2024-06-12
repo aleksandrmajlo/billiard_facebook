@@ -51,11 +51,9 @@ class GoogleBot
                 'headers' => $headers,
                 'json' => $message
             ]);
-//            Log::channel('google')->info('suc - ' . Psr7\Message::toString($response));
             return $response;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $response = $e->getResponse();
-//            Log::channel('google')->info('error - ' . Psr7\Message::toString($response));
             return $response;
         }
     }

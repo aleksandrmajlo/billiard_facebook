@@ -4,7 +4,9 @@
 namespace App\Bot;
 
 
-
+use App\Models\Booking;
+use App\Models\Customer;
+use App\Models\Table;
 
 class BookingFind
 {
